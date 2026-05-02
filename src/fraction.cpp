@@ -2,118 +2,111 @@
 #include <iostream>
 #include <stdexcept>
 
-// Default constructor
-Fraction::Fraction() {
+Fraction::Fraction()
+{
     std::cout << "I am in the default constructor" << std::endl;
-    numer_ = new int(0);
-    denom_ = new int(1);
+    n_ = new int(0);
+    d_ = new int(1);
 }
 
-Fraction::Fraction(int numer, int denom) {
+Fraction::Fraction(int n, int d)
+{
     std::cout << "I am in the custom constructor" << std::endl;
-    if (denom == 0) {
-        throw std::runtime_error("Can't divide by zero!");
-    }
-    numer_ = new int(numer);
-    denom_ = new int(denom);
+    if (d == 0) throw std::runtime_error("Can't divide by zero!");
+    n_ = new int(n);
+    d_ = new int(d);
 }
 
-Fraction::Fraction(const Fraction& other) {
+Fraction::Fraction(const Fraction& o)
+{
     std::cout << "I am in the copy constructor" << std::endl;
-    if (other.numer_ == nullptr || other.denom_ == nullptr) {
+    if (o.n_ == nullptr || o.d_ == nullptr)
         throw std::runtime_error("can't dereference null pointers");
-    }
-    numer_ = new int(*other.numer_);
-    denom_ = new int(*other.denom_);
+    n_ = new int(*o.n_);
+    d_ = new int(*o.d_);
 }
 
-Fraction::Fraction(Fraction&& other) {
+Fraction::Fraction(Fraction&& o)
+{
     std::cout << "I am in the move constructor" << std::endl;
-    if (other.numer_ == nullptr || other.denom_ == nullptr) {
+    if (o.n_ == nullptr || o.d_ == nullptr)
         throw std::runtime_error("can't dereference null pointers");
-    }
-    numer_ = other.numer_;
-    denom_ = other.denom_;
-    other.numer_ = nullptr;
-    other.denom_ = nullptr;
+    n_ = o.n_;
+    d_ = o.d_;
+    o.n_ = nullptr;
+    o.d_ = nullptr;
 }
 
-Fraction& Fraction::operator=(const Fraction& other) {
+Fraction& Fraction::operator=(const Fraction& o)
+{
     std::cout << "I am in the assignment operator (lvalue)" << std::endl;
-    if (this == &other) {
-        return *this;
-    }
-    if (other.numer_ == nullptr || other.denom_ == nullptr) {
+    if (this == &o) return *this;
+    if (o.n_ == nullptr || o.d_ == nullptr)
         throw std::runtime_error("can't dereference null pointers");
-    }
-    delete numer_;
-    delete denom_;
-    numer_ = new int(*other.numer_);
-    denom_ = new int(*other.denom_);
+    delete n_;
+    delete d_;
+    n_ = new int(*o.n_);
+    d_ = new int(*o.d_);
     return *this;
 }
 
-Fraction& Fraction::operator=(Fraction&& other) {
+Fraction& Fraction::operator=(Fraction&& o)
+{
     std::cout << "I am in the assignment operator (rvalue)" << std::endl;
-    if (this == &other) {
-        return *this;
-    }
-    if (other.numer_ == nullptr || other.denom_ == nullptr) {
+    if (this == &o) return *this;
+    if (o.n_ == nullptr || o.d_ == nullptr)
         throw std::runtime_error("can't dereference null pointers");
-    }
-    delete numer_;
-    delete denom_;
-    numer_ = other.numer_;
-    denom_ = other.denom_;
-    other.numer_ = nullptr;
-    other.denom_ = nullptr;
+    delete n_;
+    delete d_;
+    n_ = o.n_;
+    d_ = o.d_;
+    o.n_ = nullptr;
+    o.d_ = nullptr;
     return *this;
 }
 
-Fraction::~Fraction() {
+Fraction::~Fraction()
+{
     std::cout << "I am in the destructor" << std::endl;
-    delete numer_;
-    delete denom_;
-    numer_ = nullptr;
-    denom_ = nullptr;
+    delete n_;
+    delete d_;
+    n_ = nullptr;
+    d_ = nullptr;
 }
 
-Fraction operator+(const Fraction& lhs, const Fraction& rhs) {
+Fraction operator+(const Fraction& a, const Fraction& b)
+{
     std::cout << "I am in the plus operator" << std::endl;
-    if (lhs.numer_ == nullptr || lhs.denom_ == nullptr ||
-        rhs.numer_ == nullptr || rhs.denom_ == nullptr) {
+    if (a.n_ == nullptr || a.d_ == nullptr || b.n_ == nullptr || b.d_ == nullptr)
         throw std::runtime_error("can't dereference null pointers");
-    }
-    
-    int new_numer = (*lhs.numer_) * (*rhs.denom_) + (*lhs.denom_) * (*rhs.numer_);
-    int new_denom = (*lhs.denom_) * (*rhs.denom_);
-    return Fraction(new_numer, new_denom);
+    int n = (*a.n_) * (*b.d_) + (*a.d_) * (*b.n_);
+    int d = (*a.d_) * (*b.d_);
+    return Fraction(n, d);
 }
 
-Fraction operator*(const Fraction& lhs, const Fraction& rhs) {
+Fraction operator*(const Fraction& a, const Fraction& b)
+{
     std::cout << "I am in the multiplication operator" << std::endl;
-    if (lhs.numer_ == nullptr || lhs.denom_ == nullptr ||
-        rhs.numer_ == nullptr || rhs.denom_ == nullptr) {
+    if (a.n_ == nullptr || a.d_ == nullptr || b.n_ == nullptr || b.d_ == nullptr)
         throw std::runtime_error("can't dereference null pointers");
-    }
-    int new_numer = (*lhs.numer_) * (*rhs.numer_);
-    int new_denom = (*lhs.denom_) * (*rhs.denom_);
-    return Fraction(new_numer, new_denom);
+    int n = (*a.n_) * (*b.n_);
+    int d = (*a.d_) * (*b.d_);
+    return Fraction(n, d);
 }
 
-std::ostream& operator<<(std::ostream& os, const Fraction& f) {
+std::ostream& operator<<(std::ostream& os, const Fraction& f)
+{
     std::cout << "I am in the << operator" << std::endl;
-    if (f.numer_ == nullptr || f.denom_ == nullptr) {
+    if (f.n_ == nullptr || f.d_ == nullptr)
         throw std::runtime_error("can't dereference null pointers");
-    }++
-    os << *f.numer_ << "/" << *f.denom_;
+    os << *f.n_ << "/" << *f.d_;
     return os;
 }
 
-double Fraction::convertToDecimal() const {
+double Fraction::convertToDecimal() const
+{
     std::cout << "I am in the convertToDecimal" << std::endl;
-    if (numer_ == nullptr || denom_ == nullptr) {
+    if (n_ == nullptr || d_ == nullptr)
         throw std::runtime_error("can't dereference null pointers");
-    }
-    return static_cast<double>(*numer_) / static_cast<double>(*denom_);
+    return static_cast<double>(*n_) / static_cast<double>(*d_);
 }
